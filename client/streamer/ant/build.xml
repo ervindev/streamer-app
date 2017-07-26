@@ -2,8 +2,9 @@
 <project name="Compile Web" default="clean and build" basedir=".">
 
     <property file="configuration.properties" />
+    <property environment="env"/>
+    <property name="FLEX_HOME" value="${env.FLEX_HOME}"/>
 
-    <!--<property name="flex.config" location="${FLEX_HOME}\frameworks\flex-config.xml" />-->
     <property name="flex.frameworks" location="${FLEX_HOME}\frameworks" />
 
     <taskdef resource="flexTasks.tasks" classpath="${FLEX_HOME}/ant/lib/flexTasks.jar"/>
