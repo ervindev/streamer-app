@@ -34,7 +34,7 @@ RUN cd ~/build \
 	&& tar -xzf apache-flex-sdk-4.16.0-bin.tar.gz \
 	&& mv apache-flex-sdk-4.16.0-bin flex_sdk \
 	&& cd flex_sdk \
-	&& ant -f installer.xml -Dair.sdk.version=2.6 \ 
+	&& ant -f installer.xml -Dair.sdk.version=23 \ 
 							-Djava.awt.headless=true \
 							-Dinput.air.download=y \
 							-Dinput.fontswf.download=y \
