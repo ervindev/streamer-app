@@ -26,6 +26,9 @@
         private var _player:RTMPPlayer;
         private var _camera:RTMPCamera;
 
+        [Bindable]
+        private var _errorCode:String;
+
         private function onInitialize():void
         {
             checkFlashVars();
@@ -64,18 +67,16 @@
 
         private function cameraErrorHandler(event:RTMPMediaEvent):void
         {
+            _errorCode = event.code;
+
             switch (event.code)
             {
-                case RTMPErrorCode.CAMERA_NOT_FOUND:
-                    changeState(ERROR_STATE);
-                    break;
                 case RTMPErrorCode.CAMERA_MUTED:
                     changeState(ERROR_STATE);
                     Security.showSettings(SecurityPanel.PRIVACY);
                     break;
-                case RTMPErrorCode.CONNECTION_FAILED:
+                default:
                     changeState(ERROR_STATE);
-                    break;
             }
         }
 
@@ -83,8 +84,6 @@
         {
             _player = new RTMPPlayer();
             _player.connect(_streamURL, _streamName);
-            _player.x = 50;
-            _player.y = 50;
             stage.addChild(_player);
 
             changeState(PLAYBACK_STATE);
@@ -136,6 +135,7 @@
                   verticalAlign="middle"
                   horizontalAlign="center">
             <s:Label text="Ops, something went wrong!"/>
+            <s:Label text="Error code: {_errorCode}"/>
             <s:Button id="tryAgainButton" label="Try Again" click="onTryAgainClick()"/>
         </s:VGroup>
     </s:VGroup>

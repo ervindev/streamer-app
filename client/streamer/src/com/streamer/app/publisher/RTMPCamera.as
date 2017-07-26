@@ -1,8 +1,8 @@
 package com.streamer.app.publisher
 {
 	import com.streamer.app.common.NetStatusCode;
-	import com.streamer.app.common.RTMPMedia;
 	import com.streamer.app.common.RTMPErrorCode;
+	import com.streamer.app.common.RTMPMedia;
 	import com.streamer.app.common.event.RTMPMediaEvent;
 
 	import flash.events.AsyncErrorEvent;
@@ -18,8 +18,40 @@ package com.streamer.app.publisher
 	public class RTMPCamera extends RTMPMedia
 	{
 		private var _fps:int = 30;
+
+		public function get fps():int
+		{
+			return _fps;
+		}
+
+		public function set fps(value:int):void
+		{
+			_fps = value;
+		}
+
 		private var _videoWidth:int = 640;
+
+		public function get videoWidth():int
+		{
+			return _videoWidth;
+		}
+
+		public function set videoWidth(value:int):void
+		{
+			_videoWidth = value;
+		}
+
 		private var _videoHeight:int = 480;
+
+		public function get videoHeight():int
+		{
+			return _videoHeight;
+		}
+
+		public function set videoHeight(value:int):void
+		{
+			_videoHeight = value;
+		}
 
 		private var _netStream:NetStream;
 
@@ -39,11 +71,11 @@ package com.streamer.app.publisher
 
 			if (camera.muted)
 			{
+				camera.addEventListener(StatusEvent.STATUS, cameraStatusHandler);
 				onCameraError(RTMPErrorCode.CAMERA_MUTED);
 				return;
 			}
 
-			camera.addEventListener(StatusEvent.STATUS, cameraStatusHandler);
 			camera.setMode(_videoWidth, _videoHeight, _fps, true);
 
 			var mic:Microphone = Microphone.getMicrophone();
@@ -71,12 +103,6 @@ package com.streamer.app.publisher
 				_netStream.attachAudio(mic);
 			}
 
-			var h264Settings:H264VideoStreamSettings = new H264VideoStreamSettings();
-			h264Settings.setProfileLevel(H264Profile.BASELINE, H264Level.LEVEL_4_1);
-			h264Settings.setMode(camera.width, camera.height, camera.fps);
-			h264Settings.setKeyFrameInterval(1);
-
-			_netStream.videoStreamSettings = h264Settings;
 			_netStream.publish(_streamName);
 		}
 
@@ -98,9 +124,14 @@ package com.streamer.app.publisher
 		private function netStatusHandler(event:NetStatusEvent):void
 		{
 			trace(this, "net status " + event.info.code);
-			if (event.info.code == NetStatusCode.STREAM_PUBLISH_START)
+			switch (event.info.code)
 			{
-				dispatchEvent(new RTMPMediaEvent(RTMPMediaEvent.STARTED));
+				case NetStatusCode.STREAM_PUBLISH_START:
+					dispatchEvent(new RTMPMediaEvent(RTMPMediaEvent.STARTED));
+					break;
+				case NetStatusCode.STREAM_PUBLISH_BAD_NAME:
+					dispatchEvent(new RTMPMediaEvent(RTMPMediaEvent.ERROR, RTMPErrorCode.BAD_STREAM_NAME));
+					break;
 			}
 		}
 
@@ -108,6 +139,8 @@ package com.streamer.app.publisher
 		{
 			if (_netStream != null)
 			{
+				_netStream.attachCamera(null);
+				_netStream.attachAudio(null);
 				_netStream.dispose();
 				_netStream = null;
 			}

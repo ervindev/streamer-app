@@ -4,6 +4,7 @@ package com.streamer.app.common
 	{
 
 		public static const CONNECTION_FAILED:String = "connectionFailed";
+		public static const BAD_STREAM_NAME:String = "badStreamName";
 
 		public static const CAMERA_NOT_FOUND:String = "cameraNotFound";
 		public static const CAMERA_MUTED:String = "cameraMuted";
