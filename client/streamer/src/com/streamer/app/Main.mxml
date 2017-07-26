@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009"
+			   xmlns:s="library://ns.adobe.com/flex/spark"
+			   width="800" height="600"
+			   frameRate="30"
+               backgroundAlpha="0"
+               initialize="onInitialize()"
+			   addedToStage="onAddedToStage()"
+               creationComplete="onCreationComplete()"
+>
+    <fx:Script><![CDATA[
+        import com.streamer.app.player.RTMPPlayer;
+        import com.streamer.app.publisher.RTMPCamera;
+        import com.streamer.app.publisher.event.RTMPCameraErrorCode;
+        import com.streamer.app.publisher.event.RTMPCameraEvent;
+
+        import mx.core.FlexGlobals;
+
+        private static const INTRO_STATE:String = "introState";
+        private static const PLAYBACK_STATE:String = "playbackState";
+        private static const ERROR_STATE:String = "errorState";
+
+        private var _streamURL:String = "rtmp://192.168.0.105/myapp/";
+        private var _streamName:String = "mystream";
+
+        private var _player:RTMPPlayer;
+        private var _camera:RTMPCamera;
+
+        private function onInitialize():void
+        {
+            checkFlashVars();
+        }
+
+        private function onCreationComplete():void
+        {
+
+        }
+
+        private function onAddedToStage():void
+        {
+
+        }
+
+        private function createCamera():void
+        {
+            _camera = new RTMPCamera();
+            _camera.addEventListener(RTMPCameraEvent.STARTED, cameraStartedHandler);
+            _camera.addEventListener(RTMPCameraEvent.ERROR, cameraErrorHandler);
+        }
+
+        private function startCamera():void
+        {
+            if (_camera == null)
+            {
+                createCamera();
+            }
+            _camera.connect(_streamURL, _streamName);
+        }
+
+        private function cameraStartedHandler(event:RTMPCameraEvent):void
+        {
+            startPlayer();
+        }
+
+        private function cameraErrorHandler(event:RTMPCameraEvent):void
+        {
+            switch (event.code)
+            {
+                case RTMPCameraErrorCode.CAMERA_NOT_FOUND:
+                    changeState(ERROR_STATE);
+                    break;
+                case RTMPCameraErrorCode.CAMERA_MUTED:
+                    changeState(ERROR_STATE);
+                    Security.showSettings(SecurityPanel.PRIVACY);
+                    break;
+            }
+        }
+
+        private function startPlayer():void
+        {
+            _player = new RTMPPlayer();
+            _player.connect(_streamURL, _streamName);
+            _player.x = 50;
+            _player.y = 50;
+            stage.addChild(_player);
+
+            changeState(PLAYBACK_STATE);
+        }
+
+        private function changeState(stateName:String):void
+        {
+            currentState = stateName;
+        }
+
+        private function onTryAgainClick():void
+        {
+            changeState(INTRO_STATE);
+        }
+
+        private function onEnterIntroState():void
+        {
+            startCamera();
+        }
+
+        private function checkFlashVars():void
+        {
+            var parameters:Object = FlexGlobals.topLevelApplication.parameters;
+            if (parameters.hasOwnProperty("streamURL"))
+            {
+                _streamURL = parameters.streamURL;
+            }
+            if (parameters.hasOwnProperty("streamName"))
+            {
+                _streamName = parameters.streamName;
+            }
+        }
+        ]]></fx:Script>
+
+    <s:states>
+        <s:State name="introState" enterState="onEnterIntroState()"/>
+        <s:State name="playbackState"/>
+        <s:State name="errorState"/>
+    </s:states>
+    <s:VGroup width="100%" height="100%">
+        <s:Group id="introGroup" includeIn="introState">
+            <s:Label text="Initializing camera and mic..."/>
+        </s:Group>
+
+        <s:Group id="playbackGroup" includeIn="playbackState">
+        </s:Group>
+
+        <s:VGroup id="errorGroup" includeIn="errorState" width="100%" height="100%"
+                  verticalAlign="middle"
+                  horizontalAlign="center">
+            <s:Label text="Ops, something went wrong!"/>
+            <s:Button id="tryAgainButton" label="Try Again" click="onTryAgainClick()"/>
+        </s:VGroup>
+    </s:VGroup>
+
+    <!--<s:SpriteVisualElement id="spriteVisualElement" width="100%" height="100%"/>-->
+</s:Application>

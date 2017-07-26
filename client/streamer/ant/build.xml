@@ -1,0 +1,31 @@
+<!--?xml version="1.0" encoding="UTF-8"?-->
+<project name="Compile Web" default="clean and build" basedir=".">
+
+    <property file="configuration.properties" />
+
+    <!--<property name="flex.config" location="${FLEX_HOME}\frameworks\flex-config.xml" />-->
+    <property name="flex.frameworks" location="${FLEX_HOME}\frameworks" />
+
+    <taskdef resource="flexTasks.tasks" classpath="${FLEX_HOME}/ant/lib/flexTasks.jar"/>
+
+    <property name="dir.build" value="../bin" />
+
+    <target name="clean and build" depends="cleanup, build project"/>
+
+    <target name="cleanup">
+        <delete file="${dir.build}/${app.name}.swf" />
+    </target>
+
+    <target name="build project">
+        <mxmlc file="${project.mainclass}" output="${dir.build}/${app.name}.swf"
+               fork="true" maxmemory="1024m">
+
+            <arg value="-static-link-runtime-shared-libraries=${prop.rsl_linkage}"/>
+            <source-path path-element="${project.src}" />
+
+            <arg line="-swf-version=${swf.version}" />
+            <debug>${prop.debug}</debug>
+            <verbose-stacktraces>${prop.debug}</verbose-stacktraces>
+        </mxmlc>
+    </target>
+</project>
