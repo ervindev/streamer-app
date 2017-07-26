@@ -42,7 +42,7 @@ RUN cd ~/build \
 #compile client app 
 RUN cd ~/build \
 	&& git clone https://github.com/ervindev/streamer-app.git \
-	&& cd streamer-app\client\streamer\ant \
+	&& cd streamer-app/client/streamer/ant \
 	&& ant -f build.xml \
 	&& mv ../bin/main.swf $WEB_DIR/main.swf
 
