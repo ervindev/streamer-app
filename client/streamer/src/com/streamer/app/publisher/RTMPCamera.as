@@ -2,8 +2,8 @@ package com.streamer.app.publisher
 {
 	import com.streamer.app.common.NetStatusCode;
 	import com.streamer.app.common.RTMPMedia;
-	import com.streamer.app.publisher.event.RTMPCameraErrorCode;
-	import com.streamer.app.publisher.event.RTMPCameraEvent;
+	import com.streamer.app.common.RTMPErrorCode;
+	import com.streamer.app.common.event.RTMPMediaEvent;
 
 	import flash.events.AsyncErrorEvent;
 	import flash.events.NetStatusEvent;
@@ -33,13 +33,13 @@ package com.streamer.app.publisher
 			var camera:Camera = Camera.getCamera();
 			if (camera == null)
 			{
-				onCameraError(RTMPCameraErrorCode.CAMERA_NOT_FOUND);
+				onCameraError(RTMPErrorCode.CAMERA_NOT_FOUND);
 				return;
 			}
 
 			if (camera.muted)
 			{
-				onCameraError(RTMPCameraErrorCode.CAMERA_MUTED);
+				onCameraError(RTMPErrorCode.CAMERA_MUTED);
 				return;
 			}
 
@@ -49,11 +49,11 @@ package com.streamer.app.publisher
 			var mic:Microphone = Microphone.getMicrophone();
 			if (mic == null)
 			{
-				onCameraError(RTMPCameraErrorCode.MIC_NOT_FOUND);
+				onCameraError(RTMPErrorCode.MIC_NOT_FOUND);
 			}
 			if (mic != null && mic.muted)
 			{
-				onCameraError(RTMPCameraErrorCode.MIC_MUTED);
+				onCameraError(RTMPErrorCode.MIC_MUTED);
 			}
 
 			var clientObj:Object = {};
@@ -87,7 +87,7 @@ package com.streamer.app.publisher
 
 		private function onCameraError(errorCode:String):void
 		{
-			dispatchEvent(new RTMPCameraEvent(RTMPCameraEvent.ERROR, errorCode));
+			dispatchEvent(new RTMPMediaEvent(RTMPMediaEvent.ERROR, errorCode));
 		}
 
 		private function netStreamAsyncErrorHandler(event:AsyncErrorEvent):void
@@ -100,7 +100,7 @@ package com.streamer.app.publisher
 			trace(this, "net status " + event.info.code);
 			if (event.info.code == NetStatusCode.STREAM_PUBLISH_START)
 			{
-				dispatchEvent(new RTMPCameraEvent(RTMPCameraEvent.STARTED));
+				dispatchEvent(new RTMPMediaEvent(RTMPMediaEvent.STARTED));
 			}
 		}
 

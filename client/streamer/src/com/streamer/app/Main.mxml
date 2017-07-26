@@ -11,8 +11,8 @@
     <fx:Script><![CDATA[
         import com.streamer.app.player.RTMPPlayer;
         import com.streamer.app.publisher.RTMPCamera;
-        import com.streamer.app.publisher.event.RTMPCameraErrorCode;
-        import com.streamer.app.publisher.event.RTMPCameraEvent;
+        import com.streamer.app.common.RTMPErrorCode;
+        import com.streamer.app.common.event.RTMPMediaEvent;
 
         import mx.core.FlexGlobals;
 
@@ -44,8 +44,8 @@
         private function createCamera():void
         {
             _camera = new RTMPCamera();
-            _camera.addEventListener(RTMPCameraEvent.STARTED, cameraStartedHandler);
-            _camera.addEventListener(RTMPCameraEvent.ERROR, cameraErrorHandler);
+            _camera.addEventListener(RTMPMediaEvent.STARTED, cameraStartedHandler);
+            _camera.addEventListener(RTMPMediaEvent.ERROR, cameraErrorHandler);
         }
 
         private function startCamera():void
@@ -57,21 +57,24 @@
             _camera.connect(_streamURL, _streamName);
         }
 
-        private function cameraStartedHandler(event:RTMPCameraEvent):void
+        private function cameraStartedHandler(event:RTMPMediaEvent):void
         {
             startPlayer();
         }
 
-        private function cameraErrorHandler(event:RTMPCameraEvent):void
+        private function cameraErrorHandler(event:RTMPMediaEvent):void
         {
             switch (event.code)
             {
-                case RTMPCameraErrorCode.CAMERA_NOT_FOUND:
+                case RTMPErrorCode.CAMERA_NOT_FOUND:
                     changeState(ERROR_STATE);
                     break;
-                case RTMPCameraErrorCode.CAMERA_MUTED:
+                case RTMPErrorCode.CAMERA_MUTED:
                     changeState(ERROR_STATE);
                     Security.showSettings(SecurityPanel.PRIVACY);
+                    break;
+                case RTMPErrorCode.CONNECTION_FAILED:
+                    changeState(ERROR_STATE);
                     break;
             }
         }

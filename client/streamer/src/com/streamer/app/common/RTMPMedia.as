@@ -1,6 +1,8 @@
 package com.streamer.app.common
 {
 	import com.streamer.app.*;
+	import com.streamer.app.common.event.RTMPMediaEvent;
+
 	import flash.display.Sprite;
 	import flash.events.NetStatusEvent;
 	import flash.events.SecurityErrorEvent;
@@ -84,7 +86,7 @@ package com.streamer.app.common
 
 		private function onConnectionFailed():void
 		{
-			trace("connection failed");
+			dispatchEvent(new RTMPMediaEvent(RTMPMediaEvent.ERROR, RTMPErrorCode.CONNECTION_FAILED));
 		}
 
 		private function netConnectionSecurityErrorHandler(event:SecurityErrorEvent):void
