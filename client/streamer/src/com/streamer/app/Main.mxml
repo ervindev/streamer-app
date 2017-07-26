@@ -134,7 +134,7 @@
         <s:VGroup id="errorGroup" includeIn="errorState" width="100%" height="100%"
                   verticalAlign="middle"
                   horizontalAlign="center">
-            <s:Label text="Ops, something went wrong!"/>
+            <s:Label text="Oops, something went wrong!"/>
             <s:Label text="Error code: {_errorCode}"/>
             <s:Button id="tryAgainButton" label="Try Again" click="onTryAgainClick()"/>
         </s:VGroup>
