@@ -1,50 +1,25 @@
 <?xml version="1.0"?>
 <s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark"
          xmlns:r="com.streamer.app.publisher.*"
-         xmlns:v="com.streamer.app.view.*" preinitialize="onPreInitialize()">
+         xmlns:v="com.streamer.app.view.*">
     <fx:Script><![CDATA[
-        import com.streamer.app.common.RTMPErrorCode;
         import com.streamer.app.common.event.RTMPMediaEvent;
-        import com.streamer.app.common.settings.IStreamConfig;
-        import com.streamer.app.common.settings.SettingsManager;
 
-        private static const INTRO_STATE:String = "introState";
-        private static const PLAYBACK_STATE:String = "playbackState";
-        private static const ERROR_STATE:String = "errorState";
+        import org.osflash.signals.Signal;
 
-        private var _streamConfig:IStreamConfig;
+        public static const DEFAULT_STATE:String = "defaultState";
+        public static const INTRO_STATE:String = "introState";
+        public static const PLAYBACK_STATE:String = "playbackState";
+        public static const ERROR_STATE:String = "errorState";
 
         [Bindable]
         private var _errorCode:String;
 
-        private function onPreInitialize():void
-        {
-            initSettings();
-        }
+        private var _cameraErrorSignal:Signal;
 
-        private function initSettings():void
+        public function get cameraErrorSignal():Signal
         {
-            _streamConfig = SettingsManager.getInstance().streamConfig;
-        }
-
-        private function onEnterIntroState():void
-        {
-            startCamera();
-        }
-
-        private function onEnterPlaybackState():void
-        {
-            startPlayer();
-        }
-
-        private function startCamera():void
-        {
-            camera.connect(_streamConfig.streamURL, _streamConfig.streamName);
-        }
-
-        private function startPlayer():void
-        {
-            playbackPage.connect(_streamConfig.streamURL, _streamConfig.streamName);
+            return _cameraErrorSignal ||= new Signal(String);
         }
 
         private function cameraStartedHandler(event:RTMPMediaEvent):void
@@ -56,15 +31,7 @@
         {
             _errorCode = event.code;
 
-            switch (event.code)
-            {
-                case RTMPErrorCode.CAMERA_MUTED:
-                    changeState(ERROR_STATE);
-                    Security.showSettings(SecurityPanel.PRIVACY);
-                    break;
-                default:
-                    changeState(ERROR_STATE);
-            }
+            cameraErrorSignal.dispatch(_errorCode);
         }
 
         private function onRetry():void
@@ -72,14 +39,15 @@
             changeState(INTRO_STATE);
         }
 
-        private function changeState(stateName:String):void
+        public function changeState(stateName:String):void
         {
             currentState = stateName;
         }
         ]]></fx:Script>
     <s:states>
-        <s:State name="introState" enterState="onEnterIntroState()"/>
-        <s:State name="playbackState" enterState="onEnterPlaybackState()"/>
+        <s:State name="defaultState"/>
+        <s:State name="introState"/>
+        <s:State name="playbackState"/>
         <s:State name="errorState"/>
     </s:states>
     <r:RTMPCamera id="camera"
