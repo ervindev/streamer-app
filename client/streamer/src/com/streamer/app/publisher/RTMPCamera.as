@@ -107,7 +107,7 @@ package com.streamer.app.publisher
 
 		private function cameraStatusHandler(event:StatusEvent):void
 		{
-			trace("camera status handler " + event.code);
+			trace("cameraStatusHandler " + event.code);
 		}
 
 		private function onCameraError(errorCode:String):void
@@ -122,7 +122,6 @@ package com.streamer.app.publisher
 
 		private function netStatusHandler(event:NetStatusEvent):void
 		{
-			trace(this, "net status " + event.info.code);
 			switch (event.info.code)
 			{
 				case NetStatusCode.STREAM_PUBLISH_START:

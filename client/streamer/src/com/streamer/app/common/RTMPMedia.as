@@ -39,7 +39,7 @@ package com.streamer.app.common
 			}
 			catch (error:Error)
 			{
-
+				trace("Error connecting to ", streamURL, error.getStackTrace());
 			}
 		}
 
@@ -71,8 +71,6 @@ package com.streamer.app.common
 
 		protected function netConnectionStatusHandler(event:NetStatusEvent):void
 		{
-			trace(this, "connection status " + event.info.code);
-
 			switch (event.info.code)
 			{
 				case NetStatusCode.CONNECT_SUCCESS:
@@ -91,7 +89,7 @@ package com.streamer.app.common
 
 		private function netConnectionSecurityErrorHandler(event:SecurityErrorEvent):void
 		{
-
+			trace("security error " + event.text);
 		}
 
 		public function dispose():void

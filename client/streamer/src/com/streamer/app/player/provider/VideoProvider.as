@@ -78,7 +78,6 @@ package com.streamer.app.player.provider
 			_videoSource = new GPUVideoSource(stageVideo);
 			_videoSource.attachNetStream(_netStream);
 			_container.addChild(_videoSource);
-
 			trace("use GPU video")
 		}
 

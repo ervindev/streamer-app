@@ -44,12 +44,12 @@ package com.streamer.app.player
 
 		private function netStreamStatusHandler(event:NetStatusEvent):void
 		{
-			trace("player net status " + event.info.code);
+			trace("RTMPPlayer netStreamStatusHandler" + event.info.code);
 		}
 
 		private function netStreamAsyncErrorHandler(event:AsyncErrorEvent):void
 		{
-
+			trace("RTMPPlayer netStreamAsyncErrorHandler", event.error.getStackTrace());
 		}
 
 		override public function dispose():void
