@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+         xmlns:r="com.streamer.app.player.*"
+         xmlns:s="library://ns.adobe.com/flex/spark">
+    <fx:Script><![CDATA[
+
+        public function connect(streamURL:String, streamName:String):void
+        {
+            player.connect(streamURL, streamName);
+        }
+
+        ]]></fx:Script>
+    <r:RTMPPlayer id="player"/>
+</s:Group>

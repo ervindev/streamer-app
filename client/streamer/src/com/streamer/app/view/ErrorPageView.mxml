@@ -1,4 +1,33 @@
 <?xml version="1.0"?>
-<s:VGroup xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark">
+<s:VGroup xmlns:fx="http://ns.adobe.com/mxml/2009"
+          verticalAlign="middle" horizontalAlign="center"
+          xmlns:s="library://ns.adobe.com/flex/spark">
+    <fx:Metadata>
+        [Event(name="retry", type="com.streamer.app.view.events.ErrorPageEvent")]
+    </fx:Metadata>
+    <fx:Script><![CDATA[
+        import com.streamer.app.view.events.ErrorPageEvent;
+
+        [Bindable]
+        private var _errorCode:String;
+
+        public function get errorCode():String
+        {
+            return _errorCode;
+        }
+
+        public function set errorCode(value:String):void
+        {
+            _errorCode = value;
+        }
+
+        private function onTryAgainClick():void
+        {
+            dispatchEvent(new ErrorPageEvent(ErrorPageEvent.RETRY));
+        }
+        ]]></fx:Script>
+    <s:Label text="Oops, something went wrong!"/>
+    <s:Label text="Error code: {_errorCode}"/>
+    <s:Button id="tryAgainButton" label="Try Again" click="onTryAgainClick()"/>
 
 </s:VGroup>

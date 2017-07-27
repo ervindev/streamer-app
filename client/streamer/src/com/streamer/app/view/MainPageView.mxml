@@ -1,0 +1,94 @@
+<?xml version="1.0"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark"
+         xmlns:r="com.streamer.app.publisher.*"
+         xmlns:v="com.streamer.app.view.*" preinitialize="onPreInitialize()">
+    <fx:Script><![CDATA[
+        import com.streamer.app.common.RTMPErrorCode;
+        import com.streamer.app.common.event.RTMPMediaEvent;
+        import com.streamer.app.common.settings.IStreamConfig;
+        import com.streamer.app.common.settings.SettingsManager;
+
+        private static const INTRO_STATE:String = "introState";
+        private static const PLAYBACK_STATE:String = "playbackState";
+        private static const ERROR_STATE:String = "errorState";
+
+        private var _streamConfig:IStreamConfig;
+
+        [Bindable]
+        private var _errorCode:String;
+
+        private function onPreInitialize():void
+        {
+            initSettings();
+        }
+
+        private function initSettings():void
+        {
+            _streamConfig = SettingsManager.getInstance().streamConfig;
+        }
+
+        private function onEnterIntroState():void
+        {
+            startCamera();
+        }
+
+        private function onEnterPlaybackState():void
+        {
+            startPlayer();
+        }
+
+        private function startCamera():void
+        {
+            camera.connect(_streamConfig.streamURL, _streamConfig.streamName);
+        }
+
+        private function startPlayer():void
+        {
+            playbackPage.connect(_streamConfig.streamURL, _streamConfig.streamName);
+        }
+
+        private function cameraStartedHandler(event:RTMPMediaEvent):void
+        {
+            changeState(PLAYBACK_STATE);
+        }
+
+        private function cameraErrorHandler(event:RTMPMediaEvent):void
+        {
+            _errorCode = event.code;
+
+            switch (event.code)
+            {
+                case RTMPErrorCode.CAMERA_MUTED:
+                    changeState(ERROR_STATE);
+                    Security.showSettings(SecurityPanel.PRIVACY);
+                    break;
+                default:
+                    changeState(ERROR_STATE);
+            }
+        }
+
+        private function onRetry():void
+        {
+            changeState(INTRO_STATE);
+        }
+
+        private function changeState(stateName:String):void
+        {
+            currentState = stateName;
+        }
+        ]]></fx:Script>
+    <s:states>
+        <s:State name="introState" enterState="onEnterIntroState()"/>
+        <s:State name="playbackState" enterState="onEnterPlaybackState()"/>
+        <s:State name="errorState"/>
+    </s:states>
+    <r:RTMPCamera id="camera"
+                  cameraStarted="cameraStartedHandler(event)"
+                  cameraError="cameraErrorHandler(event)"/>
+    <s:VGroup width="100%" height="100%">
+        <v:IntroPageView id="introPage" includeIn="introState" width="100%" height="100%"/>
+        <v:PlaybackPageView id="playbackPage" includeIn="playbackState" width="100%" height="100%"/>
+        <v:ErrorPageView id="errorPage" includeIn="errorState" width="100%" height="100%"
+                         errorCode="{_errorCode}" retry="onRetry()"/>
+    </s:VGroup>
+</s:Group>

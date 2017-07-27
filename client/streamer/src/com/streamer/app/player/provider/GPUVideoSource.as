@@ -1,7 +1,5 @@
 package com.streamer.app.player.provider
 {
-	import com.streamer.app.player.provider.VideoSource;
-
 	import flash.events.StageVideoEvent;
 	import flash.geom.Rectangle;
 	import flash.media.StageVideo;

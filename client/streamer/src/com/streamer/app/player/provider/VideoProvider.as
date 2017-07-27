@@ -1,6 +1,5 @@
 package com.streamer.app.player.provider
 {
-	import com.streamer.app.player.*;
 	import flash.display.DisplayObjectContainer;
 	import flash.events.Event;
 	import flash.events.StageVideoAvailabilityEvent;
@@ -43,9 +42,6 @@ package com.streamer.app.player.provider
 
 		private function init():void
 		{
-//			useCPUVideo();
-//			return;
-
 			_container.stage.addEventListener(StageVideoAvailabilityEvent.STAGE_VIDEO_AVAILABILITY, stageVideoAvailabilityHandler);
 
 			if (_container.stage.stageVideos.length > 0)
@@ -104,7 +100,6 @@ package com.streamer.app.player.provider
 		{
 			if (_videoSource != null)
 			{
-//				_netStream.play(false);
 				_videoSource.dispose();
 				_container.removeChild(_videoSource);
 				_videoSource = null;
@@ -125,8 +120,8 @@ package com.streamer.app.player.provider
 			if (_container != null && _container.stage != null)
 			{
 				_container.stage.removeEventListener(StageVideoAvailabilityEvent.STAGE_VIDEO_AVAILABILITY, stageVideoAvailabilityHandler);
-				_container = null;
 			}
+			_container = null;
 			_netStream = null;
 		}
 

@@ -44,7 +44,7 @@ package com.streamer.app.player
 
 		private function netStreamStatusHandler(event:NetStatusEvent):void
 		{
-
+			trace("player net status " + event.info.code);
 		}
 
 		private function netStreamAsyncErrorHandler(event:AsyncErrorEvent):void

@@ -1,7 +1,5 @@
 package com.streamer.app.player.provider
 {
-	import com.streamer.app.player.provider.VideoSource;
-
 	import flash.media.Video;
 	import flash.net.NetStream;
 

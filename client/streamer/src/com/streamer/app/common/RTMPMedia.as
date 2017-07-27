@@ -1,14 +1,14 @@
 package com.streamer.app.common
 {
-	import com.streamer.app.*;
 	import com.streamer.app.common.event.RTMPMediaEvent;
 
-	import flash.display.Sprite;
 	import flash.events.NetStatusEvent;
 	import flash.events.SecurityErrorEvent;
 	import flash.net.NetConnection;
 
-	public class RTMPMedia extends Sprite
+	import mx.core.UIComponent;
+
+	public class RTMPMedia extends UIComponent
 	{
 		protected var _streamURL:String;
 		protected var _streamName:String;

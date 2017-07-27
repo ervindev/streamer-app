@@ -9,12 +9,11 @@ package com.streamer.app.publisher
 	import flash.events.NetStatusEvent;
 	import flash.events.StatusEvent;
 	import flash.media.Camera;
-	import flash.media.H264Level;
-	import flash.media.H264Profile;
-	import flash.media.H264VideoStreamSettings;
 	import flash.media.Microphone;
 	import flash.net.NetStream;
 
+	[Event(name="cameraStarted", type="com.streamer.app.common.event.RTMPMediaEvent")]
+	[Event(name="cameraError", type="com.streamer.app.common.event.RTMPMediaEvent")]
 	public class RTMPCamera extends RTMPMedia
 	{
 		private var _fps:int = 30;
