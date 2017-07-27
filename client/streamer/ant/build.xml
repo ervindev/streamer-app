@@ -24,6 +24,10 @@
             <arg value="-static-link-runtime-shared-libraries=${prop.rsl_linkage}"/>
             <source-path path-element="${project.src}" />
 
+            <compiler.library-path dir="${project.lib}" append="true">
+                <include name="*.swc" />
+            </compiler.library-path>
+
             <arg line="-swf-version=${swf.version}" />
             <debug>${prop.debug}</debug>
             <verbose-stacktraces>${prop.debug}</verbose-stacktraces>
