@@ -44,7 +44,7 @@ package com.streamer.app.player
 
 		private function netStreamStatusHandler(event:NetStatusEvent):void
 		{
-			trace("RTMPPlayer netStreamStatusHandler" + event.info.code);
+			trace("RTMPPlayer netStreamStatusHandler " + event.info.code);
 		}
 
 		private function netStreamAsyncErrorHandler(event:AsyncErrorEvent):void
@@ -61,6 +61,8 @@ package com.streamer.app.player
 			}
 			if (_netStream != null)
 			{
+				_netStream.removeEventListener(NetStatusEvent.NET_STATUS, netStreamStatusHandler);
+				_netStream.removeEventListener(AsyncErrorEvent.ASYNC_ERROR, netStreamAsyncErrorHandler);
 				_netStream.dispose();
 				_netStream = null;
 			}

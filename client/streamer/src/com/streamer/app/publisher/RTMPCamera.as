@@ -53,6 +53,7 @@ package com.streamer.app.publisher
 		}
 
 		private var _netStream:NetStream;
+		private var _camera:Camera;
 
 		public function RTMPCamera()
 		{
@@ -61,21 +62,21 @@ package com.streamer.app.publisher
 
 		override protected function onMediaStart():void
 		{
-			var camera:Camera = Camera.getCamera();
-			if (camera == null)
+			_camera = Camera.getCamera();
+			if (_camera == null)
 			{
 				onCameraError(RTMPErrorCode.CAMERA_NOT_FOUND);
 				return;
 			}
 
-			if (camera.muted)
+			_camera.addEventListener(StatusEvent.STATUS, cameraStatusHandler);
+			if (_camera.muted)
 			{
-				camera.addEventListener(StatusEvent.STATUS, cameraStatusHandler);
 				onCameraError(RTMPErrorCode.CAMERA_MUTED);
 				return;
 			}
 
-			camera.setMode(_videoWidth, _videoHeight, _fps, true);
+			_camera.setMode(_videoWidth, _videoHeight, _fps, true);
 
 			var mic:Microphone = Microphone.getMicrophone();
 			if (mic == null)
@@ -95,7 +96,7 @@ package com.streamer.app.publisher
 			_netStream.addEventListener(NetStatusEvent.NET_STATUS, netStatusHandler);
 			_netStream.addEventListener(AsyncErrorEvent.ASYNC_ERROR, netStreamAsyncErrorHandler);
 			_netStream.client = clientObj;
-			_netStream.attachCamera(camera);
+			_netStream.attachCamera(_camera);
 
 			if (mic != null)
 			{
@@ -107,7 +108,21 @@ package com.streamer.app.publisher
 
 		private function cameraStatusHandler(event:StatusEvent):void
 		{
-			trace("cameraStatusHandler " + event.code);
+			if (event.code == "Camera.Muted")
+			{
+				if (_netStream != null)
+				{
+					removeNetStream();
+					onCameraError(RTMPErrorCode.CAMERA_MUTED);
+				}
+			}
+			else
+			{
+				if (_netStream == null)
+				{
+					onMediaStart();
+				}
+			}
 		}
 
 		private function onCameraError(errorCode:String):void
@@ -117,7 +132,7 @@ package com.streamer.app.publisher
 
 		private function netStreamAsyncErrorHandler(event:AsyncErrorEvent):void
 		{
-
+			trace("RTMPCamera asyncError " + event.error.getStackTrace());
 		}
 
 		private function netStatusHandler(event:NetStatusEvent):void
@@ -135,14 +150,31 @@ package com.streamer.app.publisher
 
 		override public function dispose():void
 		{
+			removeNetStream();
+			removeCamera();
+			super.dispose();
+		}
+
+		private function removeNetStream():void
+		{
 			if (_netStream != null)
 			{
+				_netStream.removeEventListener(NetStatusEvent.NET_STATUS, netStatusHandler);
+				_netStream.removeEventListener(AsyncErrorEvent.ASYNC_ERROR, netStreamAsyncErrorHandler);
 				_netStream.attachCamera(null);
 				_netStream.attachAudio(null);
 				_netStream.dispose();
 				_netStream = null;
 			}
-			super.dispose();
+		}
+
+		private function removeCamera():void
+		{
+			if (_camera != null)
+			{
+				_camera.removeEventListener(StatusEvent.STATUS, cameraStatusHandler);
+				_camera = null;
+			}
 		}
 	}
 }

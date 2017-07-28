@@ -27,6 +27,7 @@ package com.streamer.app.view.mediators
 		override public function destroy():void
 		{
 			startPlayerSignal.remove(onStartPlayer);
+			view.player.dispose();
 		}
 
 		private function onStartPlayer(streamURL:String, streamName:String):void
