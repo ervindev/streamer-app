@@ -52,6 +52,18 @@ package com.streamer.app.publisher
 			_videoHeight = value;
 		}
 
+		private var _quality:int = 90;
+
+		public function get quality():int
+		{
+			return _quality;
+		}
+
+		public function set quality(value:int):void
+		{
+			_quality = value;
+		}
+
 		private var _netStream:NetStream;
 		private var _camera:Camera;
 
@@ -62,31 +74,13 @@ package com.streamer.app.publisher
 
 		override protected function onMediaStart():void
 		{
-			_camera = Camera.getCamera();
-			if (_camera == null)
+			removeCamera();
+			if (!setupCamera())
 			{
-				onCameraError(RTMPErrorCode.CAMERA_NOT_FOUND);
 				return;
 			}
 
-			_camera.addEventListener(StatusEvent.STATUS, cameraStatusHandler);
-			if (_camera.muted)
-			{
-				onCameraError(RTMPErrorCode.CAMERA_MUTED);
-				return;
-			}
-
-			_camera.setMode(_videoWidth, _videoHeight, _fps, true);
-
-			var mic:Microphone = Microphone.getMicrophone();
-			if (mic == null)
-			{
-				onCameraError(RTMPErrorCode.MIC_NOT_FOUND);
-			}
-			if (mic != null && mic.muted)
-			{
-				onCameraError(RTMPErrorCode.MIC_MUTED);
-			}
+			var mic:Microphone = setupMicrophone();
 
 			var clientObj:Object = {};
 			clientObj.onMetaData = onMetaData;
@@ -104,6 +98,41 @@ package com.streamer.app.publisher
 			}
 
 			_netStream.publish(_streamName);
+		}
+
+		private function setupMicrophone():Microphone
+		{
+			var mic:Microphone = Microphone.getMicrophone();
+			if (mic == null)
+			{
+				onCameraError(RTMPErrorCode.MIC_NOT_FOUND);
+			}
+			if (mic != null && mic.muted)
+			{
+				onCameraError(RTMPErrorCode.MIC_MUTED);
+			}
+			return mic;
+		}
+
+		private function setupCamera():Boolean
+		{
+			_camera = Camera.getCamera();
+			if (_camera == null)
+			{
+				onCameraError(RTMPErrorCode.CAMERA_NOT_FOUND);
+				return false;
+			}
+
+			_camera.addEventListener(StatusEvent.STATUS, cameraStatusHandler);
+			if (_camera.muted)
+			{
+				onCameraError(RTMPErrorCode.CAMERA_MUTED);
+				return false;
+			}
+
+			_camera.setMode(_videoWidth, _videoHeight, _fps, true);
+			_camera.setQuality(0, _quality);
+			return true;
 		}
 
 		private function cameraStatusHandler(event:StatusEvent):void
