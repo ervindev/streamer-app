@@ -1,16 +1,15 @@
 package com.streamer.app.config
 {
-	import com.streamer.app.commands.MediaErrorCommand;
 	import com.streamer.app.commands.InitializeSettingsCommand;
+	import com.streamer.app.commands.MediaErrorCommand;
 	import com.streamer.app.commands.RunCameraCommand;
 	import com.streamer.app.commands.RunPlayerCommand;
-	import com.streamer.app.common.event.RTMPMediaEvent;
-	import com.streamer.app.common.settings.SettingsManager;
 	import com.streamer.app.models.ErrorPageModel;
+	import com.streamer.app.models.settings.SettingsManager;
 	import com.streamer.app.publisher.RTMPCamera;
-	import com.streamer.app.signals.MediaErrorSignal;
 	import com.streamer.app.signals.CameraStartedSignal;
 	import com.streamer.app.signals.InitializeSettingsSignal;
+	import com.streamer.app.signals.MediaErrorSignal;
 	import com.streamer.app.signals.RunCameraSignal;
 	import com.streamer.app.signals.RunPlayerSignal;
 	import com.streamer.app.signals.StartCameraSignal;
@@ -26,7 +25,6 @@ package com.streamer.app.config
 	import com.streamer.app.view.mediators.RTMPCameraMediator;
 
 	import robotlegs.bender.extensions.eventCommandMap.api.IEventCommandMap;
-
 	import robotlegs.bender.extensions.mediatorMap.api.IMediatorMap;
 	import robotlegs.bender.extensions.signalCommandMap.api.ISignalCommandMap;
 	import robotlegs.bender.framework.api.IConfig;

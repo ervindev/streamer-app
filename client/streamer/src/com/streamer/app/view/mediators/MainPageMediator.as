@@ -1,9 +1,9 @@
 package com.streamer.app.view.mediators
 {
-	import com.streamer.app.common.RTMPErrorCode;
-	import com.streamer.app.signals.MediaErrorSignal;
+	import com.streamer.app.models.RTMPErrorCode;
 	import com.streamer.app.signals.CameraStartedSignal;
 	import com.streamer.app.signals.InitializeSettingsSignal;
+	import com.streamer.app.signals.MediaErrorSignal;
 	import com.streamer.app.view.MainPageView;
 
 	import flash.system.Security;

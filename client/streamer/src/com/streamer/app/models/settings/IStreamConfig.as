@@ -1,4 +1,4 @@
-package com.streamer.app.common.settings
+package com.streamer.app.models.settings
 {
 	public interface IStreamConfig
 	{

@@ -1,7 +1,7 @@
 package com.streamer.app.view.mediators
 {
 	import com.streamer.app.common.NetStatusCode;
-	import com.streamer.app.common.RTMPErrorCode;
+	import com.streamer.app.models.RTMPErrorCode;
 	import com.streamer.app.signals.MediaErrorSignal;
 
 	import flash.events.NetStatusEvent;

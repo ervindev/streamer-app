@@ -1,4 +1,4 @@
-package com.streamer.app.common
+package com.streamer.app.models
 {
 	public class RTMPErrorCode
 	{

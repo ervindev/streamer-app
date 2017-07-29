@@ -1,8 +1,8 @@
 package com.streamer.app.commands
 {
-	import com.streamer.app.common.settings.IStreamConfig;
-	import com.streamer.app.common.settings.SettingsManager;
-	import com.streamer.app.common.settings.StreamConfigFactory;
+	import com.streamer.app.models.settings.IStreamConfig;
+	import com.streamer.app.models.settings.SettingsManager;
+	import com.streamer.app.models.settings.StreamConfigFactory;
 
 	import robotlegs.bender.bundles.mvcs.Command;
 
