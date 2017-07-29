@@ -2,5 +2,20 @@
 <s:VGroup xmlns:fx="http://ns.adobe.com/mxml/2009"
           verticalAlign="middle" horizontalAlign="center"
           xmlns:s="library://ns.adobe.com/flex/spark">
-    <s:Label text="Initializing camera and mic..."/>
+    <fx:Script><![CDATA[
+        import org.osflash.signals.Signal;
+
+        private var _startButtonSignal:Signal;
+
+        public function get startButtonSignal():Signal
+        {
+            return _startButtonSignal ||= new Signal();
+        }
+
+        private function onStartButtonClick():void
+        {
+            startButtonSignal.dispatch();
+        }
+        ]]></fx:Script>
+    <s:Button id="startButton" label="Start streaming" click="onStartButtonClick()"/>
 </s:VGroup>

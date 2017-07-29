@@ -15,6 +15,16 @@ package com.streamer.app.view.mediators
 
 		override public function initialize():void
 		{
+			view.startButtonSignal.addOnce(onStartButtonClicked);
+		}
+
+		override public function destroy():void
+		{
+			view.startButtonSignal.remove(onStartButtonClicked);
+		}
+
+		private function onStartButtonClicked():void
+		{
 			runCameraSignal.dispatch();
 		}
 	}
