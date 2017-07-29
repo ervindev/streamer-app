@@ -1,3 +1,4 @@
 client/streamer/bin/*
 client/streamer/.idea/
 client/streamer/*.iml
+client/libs-source/*
