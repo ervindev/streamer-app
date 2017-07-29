@@ -3,36 +3,10 @@
          xmlns:r="com.streamer.app.publisher.*"
          xmlns:v="com.streamer.app.view.*">
     <fx:Script><![CDATA[
-        import com.streamer.app.common.event.RTMPMediaEvent;
-
-        import org.osflash.signals.Signal;
-
         public static const DEFAULT_STATE:String = "defaultState";
         public static const INTRO_STATE:String = "introState";
         public static const PLAYBACK_STATE:String = "playbackState";
         public static const ERROR_STATE:String = "errorState";
-
-        [Bindable]
-        private var _errorCode:String;
-
-        private var _cameraErrorSignal:Signal;
-
-        public function get cameraErrorSignal():Signal
-        {
-            return _cameraErrorSignal ||= new Signal(String);
-        }
-
-        private function cameraStartedHandler(event:RTMPMediaEvent):void
-        {
-            changeState(PLAYBACK_STATE);
-        }
-
-        private function cameraErrorHandler(event:RTMPMediaEvent):void
-        {
-            _errorCode = event.code;
-
-            cameraErrorSignal.dispatch(_errorCode);
-        }
 
         private function onRetry():void
         {
@@ -50,13 +24,10 @@
         <s:State name="playbackState"/>
         <s:State name="errorState"/>
     </s:states>
-    <r:RTMPCamera id="camera" videoWidth="640" videoHeight="480" fps="30" quality="90"
-                  cameraStarted="cameraStartedHandler(event)"
-                  cameraError="cameraErrorHandler(event)"/>
+    <r:RTMPCamera id="camera" videoWidth="640" videoHeight="480" fps="30" quality="90"/>
     <s:VGroup width="100%" height="100%">
         <v:IntroPageView id="introPage" includeIn="introState" width="100%" height="100%"/>
         <v:PlaybackPageView id="playbackPage" includeIn="playbackState" width="100%" height="100%"/>
-        <v:ErrorPageView id="errorPage" includeIn="errorState" width="100%" height="100%"
-                         errorCode="{_errorCode}" retry="onRetry()"/>
+        <v:ErrorPageView id="errorPage" includeIn="errorState" width="100%" height="100%" retry="onRetry()"/>
     </s:VGroup>
 </s:Group>

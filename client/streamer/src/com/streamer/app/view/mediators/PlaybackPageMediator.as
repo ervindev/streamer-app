@@ -4,6 +4,8 @@ package com.streamer.app.view.mediators
 	import com.streamer.app.signals.StartPlayerSignal;
 	import com.streamer.app.view.PlaybackPageView;
 
+	import org.osmf.utils.OSMFSettings;
+
 	import robotlegs.bender.bundles.mvcs.Mediator;
 
 	public class PlaybackPageMediator extends Mediator
@@ -27,12 +29,18 @@ package com.streamer.app.view.mediators
 		override public function destroy():void
 		{
 			startPlayerSignal.remove(onStartPlayer);
-			view.player.dispose();
+			view.display.stop();
+			view.display.source = "";
 		}
 
 		private function onStartPlayer(streamURL:String, streamName:String):void
 		{
-			view.connect(streamURL, streamName);
+			if (OSMFSettings.supportsStageVideo)
+			{
+				OSMFSettings.enableStageVideo = true;
+			}
+			view.display.source = streamURL + streamName;
+			view.display.play();
 		}
 	}
 }

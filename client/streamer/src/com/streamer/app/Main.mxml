@@ -3,7 +3,7 @@
                xmlns:s="library://ns.adobe.com/flex/spark"
                xmlns:v="com.streamer.app.view.*" xmlns:rl2="robotlegs.bender.mxml.*"
                xmlns:mvcs="robotlegs.bender.bundles.mvcs.*"
-               xmlns:signal="robotlegs.bender.extensions.signalCommandMap.*" xmlns:config2="com.streamer.app.config.*"
+               xmlns:signal="robotlegs.bender.extensions.signalCommandMap.*" xmlns:config="com.streamer.app.config.*"
                width="800" height="600"
                frameRate="30"
                backgroundAlpha="0">
@@ -11,7 +11,7 @@
         <rl2:ContextBuilderTag>
             <mvcs:MVCSBundle/>
             <signal:SignalCommandMapExtension/>
-            <config2:AppConfig/>
+            <config:AppConfig/>
         </rl2:ContextBuilderTag>
     </fx:Declarations>
     <v:MainPageView id="mainPage" width="100%" height="100%"/>

@@ -1,9 +1,9 @@
 package com.streamer.app.view.mediators
 {
 	import com.streamer.app.common.RTMPErrorCode;
+	import com.streamer.app.signals.MediaErrorSignal;
+	import com.streamer.app.signals.CameraStartedSignal;
 	import com.streamer.app.signals.InitializeSettingsSignal;
-	import com.streamer.app.signals.RunPlayerSignal;
-	import com.streamer.app.signals.StartCameraSignal;
 	import com.streamer.app.view.MainPageView;
 
 	import flash.system.Security;
@@ -20,15 +20,16 @@ package com.streamer.app.view.mediators
 		public var initializeSettingsSignal:InitializeSettingsSignal;
 
 		[Inject]
-		public var runPlayerSignal:RunPlayerSignal;
+		public var cameraStartedSignal:CameraStartedSignal;
 
 		[Inject]
-		public var startCameraSignal:StartCameraSignal;
+		public var mediaErrorSignal:MediaErrorSignal;
 
 		override public function initialize():void
 		{
-			view.cameraErrorSignal.add(onCameraError);
-			startCameraSignal.add(onStartCamera);
+			cameraStartedSignal.add(onCameraStarted);
+			mediaErrorSignal.add(onMediaError);
+
 			initializeSettingsSignal.dispatch();
 
 			view.changeState(MainPageView.INTRO_STATE);
@@ -36,16 +37,16 @@ package com.streamer.app.view.mediators
 
 		override public function destroy():void
 		{
-			view.cameraErrorSignal.remove(onCameraError);
-			startCameraSignal.remove(onStartCamera);
+			cameraStartedSignal.remove(onCameraStarted);
+			mediaErrorSignal.remove(onMediaError);
 		}
 
-		private function onStartCamera(streamURL:String, streamName:String):void
+		private function onCameraStarted():void
 		{
-			view.camera.connect(streamURL, streamName);
+			view.changeState(MainPageView.PLAYBACK_STATE);
 		}
 
-		private function onCameraError(errorCode:String):void
+		private function onMediaError(errorCode:String):void
 		{
 			switch (errorCode)
 			{
